@@ -45,7 +45,7 @@ t_redir *create_redir_command(char *file,int fd, int flags,t_list *env_list)
 
 int main()
 {
-    char *input = strdup("echo -n ahemd  dfjkf");
+    char *input = strdup("cd lexffff.c");
     char *end = input + strlen(input);
 
     t_exec *exec_cmd ;
