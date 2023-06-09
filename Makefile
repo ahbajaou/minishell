@@ -9,7 +9,7 @@ CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g3
 all :  $(NAMES)
 
 $(NAMES) : $(CFILES)
-			$(CC) $(CFLAGS) $(CFILES) -o minishell
+			$(CC) $(CFLAGS) -lreadline $(CFILES) -o minishell
 
 clean : 
 		$(RM) $(NAMES)
