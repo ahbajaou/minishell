@@ -49,14 +49,8 @@ t_redir *create_redir_command(char *file,int fd, int flags,t_list *env_list)
 
 int main()
 {
-    char *input;
-    while (1)
-    {
-        char *input = readline("minishell $: ");
-        if (!input)
-            exit(1);
-    }
-    printf("--%s\n",input);
+     
+    char *input = strdup("cd ..");
     char *end = input + strlen(input);
 
     t_exec *exec_cmd ;
@@ -89,5 +83,11 @@ int main()
       else 
         break;
     }
+    // while (1)
+    // {
+    //     char * a = readline("minishell $: ");
+    //     if (!a)
+    //         exit(1);
+    // }
     ft_exec(exec_cmd);
 }

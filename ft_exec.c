@@ -6,7 +6,7 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 22:19:18 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/06/08 23:42:27 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/06/12 01:08:08 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,17 @@ void    get_pwd(void)
 
 void    change_dr(char **str)
 {
-    chdir(str[1]);
+    (void)str;
+    char oldpwd[256];
+    char pwd[256];
+    if (getcwd(oldpwd, sizeof(oldpwd)) != NULL)
+        printf("----%s\n",oldpwd);
+     if (strcmp(str[0], "cd") == 0)
+        chdir("..");
+     else if (strcmp(str[0], "cd") == 0 && strcmp(str[1], "..") == 0)
+             chdir("..");
+     if (getcwd(pwd, sizeof(pwd)) != NULL)
+        printf("----%s\n",pwd);
 }
 void    ft_exec(t_exec *cmd)
 {
