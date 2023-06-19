@@ -1,8 +1,4 @@
-#include <stdio.h>
-#include <readline/readline.h>
-#include <unistd.h>
-#include <readline/history.h>
-#include "minishell.h"
+# include "minishell.h"
 
 t_cmd *create_exec_command(void)
 {
@@ -46,48 +42,95 @@ t_redir *create_redir_command(char *file,int fd, int flags,t_list *env_list)
     return(redir);
 }
 
+// int main()
+// {
+//     // char *input = strdup("cmd | cat > file");
+//     // char *end = input + strlen(input);
 
-int main()
-{
-     
-    char *input = strdup("cd ..");
-    char *end = input + strlen(input);
+//     t_exec *exec_cmd ;
+//     t_pipe *pipe_cmd ;
+//     t_redir *redir_cmd ;
+//     t_cmd *cmd = parse_pipe(&input,end,NULL);
 
-    t_exec *exec_cmd ;
-    t_pipe *pipe_cmd ;
-    t_redir *redir_cmd ;
-    t_cmd *cmd = parse_pipe(&input,end,NULL);
-    while(cmd)
-    {
-        if(cmd->type == 3)
-        {
-            redir_cmd = (t_redir *)cmd;
-            printf("Type de la commande redirection : %d\n", redir_cmd->type);
-            printf("%s\n",redir_cmd->file);
-            cmd = redir_cmd->cmd;
-        }
-        else if(cmd->type == 2)
-        {
-            pipe_cmd = (t_pipe*)cmd;
-            printf("Type de la commande pipe : %d\n", pipe_cmd->type);
-            cmd = pipe_cmd->right;
-        }
-        else if (cmd->type == 1)
-        {
+//     while(cmd)
+//     {
+//         char *str = readline("minishell: ");
+//         if (!str)
+//             exit(1);
+//         if(cmd->type == 3)
+//         {
+//             redir_cmd = (t_redir *)cmd;
+//             printf("Type de la commande redirection : %d\n", redir_cmd->type);
+//             printf("%s\n",redir_cmd->file);
+//             cmd = redir_cmd->cmd;
+//         }
+//         else if(cmd->type == 2)
+//         {
+//             pipe_cmd = (t_pipe*)cmd;
+//             printf("Type de la commande pipe : %d\n", pipe_cmd->type);
+//             cmd = pipe_cmd->right;
+//         }
+//         else if (cmd->type == 1)
+//         {
             
-            exec_cmd = (t_exec *)cmd;
-            printf("Type de la commande exécution : %d\n", exec_cmd->type);
-            printf("%s\n",exec_cmd->args[0]);
-            cmd = exec_cmd->cmd;
-      }
-      else 
-        break;
+//             exec_cmd = (t_exec *)cmd;
+//             printf("Type de la commande exécution : %d\n", exec_cmd->type);
+//             printf("%s\n",exec_cmd->args[0]);
+//             cmd = exec_cmd->cmd;
+//       }
+//       else 
+//         break;
+//     }
+// }
+
+int main(int ac,char **av, char **env)
+{
+    t_exec *exec_cmd = NULL;
+    t_pipe *pipe_cmd = NULL;
+    t_redir *redir_cmd = NULL;
+    (void)ac;
+    (void)av;
+
+    while(1)
+    {
+        char *str = readline("minishell: ");
+        if (!str)
+            exit(1);
+        // On passe la chaîne à parse_pipe
+        int end = strlen(str);
+        t_cmd *cmd = parse_pipe(&str, str + end, NULL);
+        if (cmd == NULL) {
+            exit(1);
+        }
+        while(cmd)
+        {
+            if(cmd->type == 3)
+            {
+                redir_cmd = (t_redir *)cmd;
+                printf("Type de la commande redirection : %d\n", redir_cmd->type);
+                printf("%s\n",redir_cmd->file);
+                cmd = redir_cmd->cmd;
+            }
+            else if(cmd->type == 2)
+            {
+                pipe_cmd = (t_pipe*)cmd;
+                printf("Type de la commande pipe : %d\n", pipe_cmd->type);
+                cmd = pipe_cmd->left;
+            }
+            else if (cmd->type == 1)
+            {
+
+                exec_cmd = (t_exec *)cmd;
+                printf("Type de la commande exécution : %d\n", exec_cmd->type);
+                printf("%s\n",exec_cmd->args[0]);
+                cmd = exec_cmd->cmd;
+            }
+            else 
+                break;
+        }
+        // free(str);
+        ft_exec(exec_cmd, env);
     }
-    // while (1)
-    // {
-    //     char * a = readline("minishell $: ");
-    //     if (!a)
-    //         exit(1);
-    // }
-    ft_exec(exec_cmd);
+
+    return 0;
 }

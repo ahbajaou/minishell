@@ -7,6 +7,8 @@
 # include <string.h>
 # include <fcntl.h>
 #include <string.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 # define EXEC 1
 # define PIPE 2
@@ -23,7 +25,7 @@ typedef struct v_exec
     int type;
     char *args[1024];
     int argc;
-    t_cmd *cmd;
+    t_cmd *cmd;;
 }           t_exec;
 
 typedef struct v_pipe
@@ -32,7 +34,6 @@ typedef struct v_pipe
     struct  s_cmd *right;
     struct  s_cmd *left;
 }       t_pipe;
-
 typedef struct v_redir
 {
     int type;
@@ -42,12 +43,12 @@ typedef struct v_redir
     int fd;
     int flags;
 }       t_redir;
-
 typedef struct v_list
 {
     char *content;
     struct s_list *next;
 }   t_list;
+
 
 
 int			get_token(char **str, char *end_str, char **previous, char **ep);
@@ -90,7 +91,7 @@ t_cmd	*parse_redirs(t_cmd *cmd, char **str, char *stre, t_list *env_l);
 t_cmd	*pipe_data(t_cmd *right, t_cmd *left);
 t_cmd	*get_cmd(void);
 void	set_args(char *str, char **args, int *argc);
-
-void    ft_exec(t_exec *cmd);
+void    ft_exec(t_exec *exec_cmd, char **env);
+char	**ft_split(char *str, char sep);
 
 #endif

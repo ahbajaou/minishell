@@ -35,7 +35,7 @@ t_cmd	*parse_exec(char **str, char *stre, t_list *env_l)
 		else
 		{
 			set_args(ret_str(p, pe),&ecmd->args[ecmd->argc], &ecmd->argc);
-			
+			// ecmd->argc++;
 		}
 			
 		cmd = parse_redirs(cmd, str, stre, env_l);
@@ -48,10 +48,7 @@ int	redir_error(int tok)
 {
 
 	if (!tok)
-	{
-	
 		return (1);
-	}
 	return (0);
 }
 
@@ -74,6 +71,7 @@ t_cmd	*reverse_cmd(t_cmd *cmd1, t_cmd *cmd2)
 	}
 	return (cmd2);
 }
+
 t_cmd	*parse_redirs(t_cmd *cmd, char **str, char *stre, t_list *env_l)
 {
 	char		*p  ;
