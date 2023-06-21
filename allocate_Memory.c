@@ -86,7 +86,7 @@ t_redir *create_redir_command(char *file,int fd, int flags,t_list *env_list)
 int main(int argc, char **argv, char **envp)
 {
     t_list *envt = env(NULL, envp);
-    print_env(envt);
+    // print_env(envt);
 	(void)argc, (void)argv;
     t_exec *exec_cmd = NULL;
     t_pipe *pipe_cmd = NULL;
@@ -128,6 +128,7 @@ int main(int argc, char **argv, char **envp)
                 break;
         }
         // free(str);
+        ft_exec(exec_cmd, envt);
     }
 
     return 0;

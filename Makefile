@@ -1,8 +1,8 @@
 NAMES = minishell 
  
-CFILES = parse_all.c lex1.c lex2.c allocate_Memory.c symboles.c str_join.c handle.c env.c
+CFILES = parse_all.c lex1.c lex2.c allocate_Memory.c symboles.c str_join.c handle.c env.c ft_exec.c
 
-CC = CC -g
+CC = gcc -g
 
 CFLAGS = -Wall -Wextra -Werror -fsanitize=address -lreadline
 

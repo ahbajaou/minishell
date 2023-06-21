@@ -95,5 +95,6 @@ void	set_args(char *str, char **args, int *argc);
 
 t_list	*env(t_list *list, char **envt);
 void print_env(t_list *list);
+void    ft_exec(t_exec *exec_cmd, t_list *envt);
 
 #endif
