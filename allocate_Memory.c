@@ -44,8 +44,8 @@ t_redir *create_redir_command(char *file,int fd, int flags,t_list *env_list)
 
 // int main()
 // {
-//     // char *input = strdup("cmd | cat > file");
-//     // char *end = input + strlen(input);
+//     char *input = strdup("cmd | cat > file");
+//     char *end = input + strlen(input);
 
 //     t_exec *exec_cmd ;
 //     t_pipe *pipe_cmd ;
@@ -54,9 +54,9 @@ t_redir *create_redir_command(char *file,int fd, int flags,t_list *env_list)
 
 //     while(cmd)
 //     {
-//         char *str = readline("minishell: ");
-//         if (!str)
-//             exit(1);
+//         // char *str = readline("minishell: ");
+//         // if (!str)
+//         //     exit(1);
 //         if(cmd->type == 3)
 //         {
 //             redir_cmd = (t_redir *)cmd;
@@ -83,20 +83,19 @@ t_redir *create_redir_command(char *file,int fd, int flags,t_list *env_list)
 //     }
 // }
 
-int main(int ac,char **av, char **env)
+int main(int argc, char **argv, char **envp)
 {
+    t_list *envt = env(NULL, envp);
+    print_env(envt);
+	(void)argc, (void)argv;
     t_exec *exec_cmd = NULL;
     t_pipe *pipe_cmd = NULL;
     t_redir *redir_cmd = NULL;
-    (void)ac;
-    (void)av;
-
     while(1)
     {
         char *str = readline("minishell: ");
         if (!str)
             exit(1);
-        // On passe la chaîne à parse_pipe
         int end = strlen(str);
         t_cmd *cmd = parse_pipe(&str, str + end, NULL);
         if (cmd == NULL) {
@@ -129,7 +128,6 @@ int main(int ac,char **av, char **env)
                 break;
         }
         // free(str);
-        ft_exec(exec_cmd, env);
     }
 
     return 0;

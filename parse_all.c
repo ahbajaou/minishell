@@ -33,10 +33,7 @@ t_cmd	*parse_exec(char **str, char *stre, t_list *env_l)
 		if (get_token(str, stre, &p, &pe) == 0)
 			break ;
 		else
-		{
 			set_args(ret_str(p, pe),&ecmd->args[ecmd->argc], &ecmd->argc);
-			// ecmd->argc++;
-		}
 			
 		cmd = parse_redirs(cmd, str, stre, env_l);
 	}

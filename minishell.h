@@ -43,10 +43,11 @@ typedef struct v_redir
     int fd;
     int flags;
 }       t_redir;
+
 typedef struct v_list
 {
     char *content;
-    struct s_list *next;
+    struct v_list *next;
 }   t_list;
 
 
@@ -91,7 +92,8 @@ t_cmd	*parse_redirs(t_cmd *cmd, char **str, char *stre, t_list *env_l);
 t_cmd	*pipe_data(t_cmd *right, t_cmd *left);
 t_cmd	*get_cmd(void);
 void	set_args(char *str, char **args, int *argc);
-void    ft_exec(t_exec *exec_cmd, char **env);
-char	**ft_split(char *str, char sep);
+
+t_list	*env(t_list *list, char **envt);
+void print_env(t_list *list);
 
 #endif
