@@ -50,6 +50,14 @@ typedef struct v_list
     struct v_list *next;
 }   t_list;
 
+typedef struct e_list
+{
+    char *flag;
+    char *key;
+    char *value;
+    struct e_list *next;
+}   ev_list;
+
 
 
 int			get_token(char **str, char *end_str, char **previous, char **ep);
@@ -95,6 +103,7 @@ void	set_args(char *str, char **args, int *argc);
 
 t_list	*env(t_list *list, char **envt);
 void print_env(t_list *list);
-void    ft_exec(t_exec *exec_cmd, t_list *envt);
+void    ft_exec(t_exec *exec_cmd, char **envp);
+char	**ft_split( char *s, char c);
 
 #endif

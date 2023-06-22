@@ -6,12 +6,14 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 00:17:17 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/06/21 17:28:07 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/06/22 06:31:37 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 # include "minishell.h"
+
+#include <string.h>
 
 int ft_strcmp(char *s1, char *s2)
 {
@@ -102,11 +104,85 @@ void    ft_echo(t_exec *cmd)
 // {
 //     printf("===%s\n",cmd->args[1]);
 // }
-void    ft_env(t_list *env2)
+char	*ft__strdup(char *str)
+{
+	int		i;
+	char	*dup;
+
+	i = strlen(str);
+	dup = malloc(sizeof(char) * (i + 1));
+	if (dup == NULL)
+		return (NULL);
+	i = 0;
+	while (str[i] != '\0')
+	{
+		dup[i] = str[i];
+		i++;
+	}
+	dup[i] = '\0';
+	return (dup);
+}
+ev_list *key_value(char *key, char *value)
+{
+    ev_list *env;
+    env = malloc(sizeof(ev_list));
+    env->key = ft__strdup(key);
+    env->value = ft__strdup(value);
+    env->next = NULL;
+    return (env);
+}
+ev_list    *addback(ev_list *head, char *key, char *value)
 {
 
+    head = malloc(sizeof(ev_list));
+    if (head != NULL)
+        head = key_value(key, value);
+    return (head);
 }
-void    check_builting(t_exec *cmd, t_list *env)
+void    ft_env(ev_list *env, char **envp, t_exec *cmd)
+{
+    int i;
+    int flag;
+
+    i = 0;
+    flag  = 0;
+
+    (void)cmd;
+    char **tmp;
+    // if (ft_strcmp(cmd->args[0], "export") == 0)
+    //     flag  = 1;
+    env = malloc(sizeof(ev_list) * 100);
+    while (envp[i])
+    {
+        tmp = ft_split(envp[i], '=');
+        env = addback(env,tmp[0],tmp[1]);
+        // if (env->key != NULL && env->value != NULL && flag == 0)
+        //     printf("%s=%s\n", env->key ,env->value );
+        // if (flag == 1)
+        // {
+        //     int j = 0;
+        //     while (cmd->args[j])
+        //     {
+        //         printf("----%s\n",cmd->args[j]);
+        //         j++;
+        //     }
+            // printf("declare -x %s=%s\n", env->key ,env->value);
+        // }
+        i++;
+    }
+    while (env)
+        {
+            env = env->next;
+            printf("---%s---\n",env->value);
+        }
+    // free(env);
+}
+
+void    ft_export(ev_list *env, t_exec *cmd, char **envp)
+{
+    ft_env(env, envp, cmd);
+}
+void    check_builting(t_exec *cmd, char **envp, ev_list *env)
 {
     int i;
 
@@ -115,16 +191,18 @@ void    check_builting(t_exec *cmd, t_list *env)
     {
         if (ft_strcmp("echo", cmd->args[i]) == 0)
             ft_echo(cmd);
-        // if (ft_strcmp("export", cmd->args[i]) == 0)
-        //     ft_export(cmd);
         if (ft_strcmp("env", cmd->args[i]) == 0)
-            ft_env(env);
+            ft_env(env, envp, cmd);
+        if (ft_strcmp("export", cmd->args[i]) == 0)
+            ft_export(env, cmd, envp);
         
         i++;
     }
 }
-void    ft_exec(t_exec *exec_cmd, t_list *envt)
+
+void    ft_exec(t_exec *exec_cmd, char **envp)
 {
-    (void)envt;
-    check_builting(exec_cmd, envt);
+    ev_list *env = NULL;
+
+    check_builting(exec_cmd, envp, env);
 }
