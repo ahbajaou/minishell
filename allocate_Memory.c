@@ -83,9 +83,26 @@ t_redir *create_redir_command(char *file,int fd, int flags,t_list *env_list)
 //     }
 // }
 
+ev_list	*_env(char **envp)
+{
+    ev_list *env = NULL;
+
+    char **tmp = NULL;
+
+    int i = 0;
+    while (envp[i])
+    {
+        tmp = ft_split(envp[i], '=');
+        addback(&env,key_value(tmp[0], tmp[1]));
+        i++;
+    }
+    free(tmp);
+    return(env);
+}
+
 int main(int argc, char **argv, char **envp)
 {
-    // t_list *envt = env(NULL, envp);
+    ev_list *env = _env(envp);
     // t_list *envt = env1(NULL, envp);
 
     // print_env(envt);
@@ -130,7 +147,7 @@ int main(int argc, char **argv, char **envp)
                 break;
         }
         // free(str);
-        ft_exec(exec_cmd, envp);
+        ft_exec(exec_cmd, env);
     }
 
     return 0;

@@ -28,4 +28,21 @@
 // 	return head;
 // }
 
+// ev_list	*_env(char **envp)
+// {
+//     ev_list *env = NULL;
+
+//     char **tmp = NULL;
+
+//     int i = 0;
+//     while (envp[i])
+//     {
+//         tmp = ft_split(envp[i], '=');
+//         addback(&env,key_value(tmp[0], tmp[1]));
+//         i++;
+//     }
+//     free(tmp);
+//     return(env);
+// }
+
 

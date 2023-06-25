@@ -52,7 +52,6 @@ typedef struct v_list
 
 typedef struct e_list
 {
-    char *flag;
     char *key;
     char *value;
     struct e_list *next;
@@ -101,8 +100,9 @@ t_cmd	*pipe_data(t_cmd *right, t_cmd *left);
 t_cmd	*get_cmd(void);
 void	set_args(char *str, char **args, int *argc);
 
-t_list	*env(t_list *list, char **envt);
-void    ft_exec(t_exec *exec_cmd, char **envp);
+ev_list	*_env(char **envp);
+void    ft_exec(t_exec *exec_cmd, ev_list *env);
 char	**ft_split( char *s, char c);
-
+void	addback(ev_list **list, ev_list *new);
+ev_list *key_value(char *key, char *value);
 #endif
