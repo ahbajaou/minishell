@@ -6,7 +6,7 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 00:17:17 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/06/25 01:37:24 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/06/25 05:38:37 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,15 +100,13 @@ void    ft_echo(t_exec *cmd)
     if (flag)
         printf("\n");
 }
-// void    ft_export(t_exec *cmd)
-// {
-//     printf("===%s\n",cmd->args[1]);
-// }
 char	*ft__strdup(char *str)
 {
 	int		i;
 	char	*dup;
 
+    if (!str)
+        return (NULL);
 	i = strlen(str);
 	dup = malloc(sizeof(char) * (i + 1));
 	if (dup == NULL)
@@ -125,7 +123,6 @@ char	*ft__strdup(char *str)
 ev_list *key_value(char *key, char *value)
 {
     ev_list *env;
-    // printf("--keyvalaue--\n");
     env = malloc(sizeof(ev_list));
     env->key = ft__strdup(key);
     env->value = ft__strdup(value);
@@ -144,23 +141,68 @@ void	addback(ev_list **head, ev_list *new)
 			*head = new;
 		else
 		{
+            printf("---add---\n");
 			while (tmp->next != NULL)
 				tmp = tmp->next;
 			tmp->next = new;
 		}
 	}
 }
-void    print_env(ev_list *env)
+void    print_env(ev_list *env, t_exec *cmd)
 {
     ev_list *tmp;
+    int flag;
 
     tmp = env;
+    flag = 0;
+    if (ft_strcmp(cmd->args[0], "export") == 0)
+            flag  = 1;
     while (tmp)
     {
-        if (tmp->key != NULL && tmp->value != NULL)
+        if (tmp->key != NULL && tmp->value != NULL && flag == 0)
             printf("%s=%s\n",tmp->key,tmp->value);
+        if (flag)
+            printf("declare -x %s=%s\n",tmp->key,tmp->value);
         tmp = tmp->next;
     }
+}
+int str_chr(char **str)
+{
+    int i;
+    int j;
+
+  
+    i = 1;
+    if (!*str || !str)
+        return (0);
+    while (str[i])
+        {
+            j = 0;
+            while (str[i][j])
+            {
+                if (str[i][j] == '=')
+                    return (1);
+                j++;
+            }
+            i++;
+        }
+        return (0);
+}
+void    add_expo(char **str, ev_list *env)
+{
+    int i;
+    char **tmp;
+
+  
+    i = 1;
+    tmp = NULL;
+    while (str[i])
+    {
+        tmp = ft_split(str[i], '=');
+        addback(&env, key_value(tmp[0], tmp[1]));
+        i++;
+    }
+    free(tmp);
 }
 void    ft_env(ev_list *env, char **envp, t_exec *cmd)
 {
@@ -172,8 +214,8 @@ void    ft_env(ev_list *env, char **envp, t_exec *cmd)
 
     (void)cmd;
     char **tmp;
-    // if (ft_strcmp(cmd->args[0], "export") == 0)
-    //     flag  = 1;
+    if (ft_strcmp(cmd->args[0], "export") == 0)
+        flag  = 1;
     // env = malloc(sizeof(ev_list) * 100);
     while (envp[i])
     {
@@ -181,13 +223,32 @@ void    ft_env(ev_list *env, char **envp, t_exec *cmd)
         addback(&env,key_value(tmp[0], tmp[1]));
         i++;
     }
-    print_env(env);
+    if (flag && str_chr(cmd->args))
+    {
+        add_expo(cmd->args,env);
+        return ;
+    }
+    else
+        printf("------NULL-----\n");
+        return ;
+
+    ev_list *tm = env;
+    while (tm)
+    {
+        if (tm->key != NULL && tm->value != NULL)
+            printf("%s=%s\n",tm->key,tm->value);
+        tm = tm->next;
+    }
+    // if (flag)
+    //     print_env(env,cmd);
+    // if (flag == 0)
+    //     print_env(env,cmd);
     free(tmp);
 }
 
-void    ft_export(ev_list *env, t_exec *cmd, char **envp)
+void    ft_export(ev_list *env, t_exec *cmd,char **envp)
 {
-    ft_env(env, envp, cmd);
+    ft_env(env,envp,cmd);
 }
 void    check_builting(t_exec *cmd, char **envp, ev_list *env)
 {
@@ -201,7 +262,7 @@ void    check_builting(t_exec *cmd, char **envp, ev_list *env)
         if (ft_strcmp("env", cmd->args[i]) == 0)
             ft_env(env, envp, cmd);
         if (ft_strcmp("export", cmd->args[i]) == 0)
-            ft_export(env, cmd, envp);
+            ft_export(env, cmd,envp);
         
         i++;
     }
