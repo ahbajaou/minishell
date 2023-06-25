@@ -1,15 +1,6 @@
 #include "minishell.h"
 
-void print_env(t_list *env)
-{
-    t_list *current = env;
 
-    while (current != NULL)
-    {
-        printf("%s\n", current->content);
-        current = current->next;
-    }
-}
 
 // t_list	*env(t_list *list, char **envt)
 // {

@@ -102,7 +102,6 @@ t_cmd	*get_cmd(void);
 void	set_args(char *str, char **args, int *argc);
 
 t_list	*env(t_list *list, char **envt);
-void print_env(t_list *list);
 void    ft_exec(t_exec *exec_cmd, char **envp);
 char	**ft_split( char *s, char c);
 

@@ -6,7 +6,7 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 00:17:17 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/06/22 06:31:37 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/06/25 01:37:24 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,19 +125,42 @@ char	*ft__strdup(char *str)
 ev_list *key_value(char *key, char *value)
 {
     ev_list *env;
+    // printf("--keyvalaue--\n");
     env = malloc(sizeof(ev_list));
     env->key = ft__strdup(key);
     env->value = ft__strdup(value);
     env->next = NULL;
     return (env);
 }
-ev_list    *addback(ev_list *head, char *key, char *value)
+void	addback(ev_list **head, ev_list *new)
 {
+	ev_list	*tmp;
+	tmp = *head;
+	if (!head)
+		*head = new;
+	if (head != NULL)
+	{
+		if (*head == NULL)
+			*head = new;
+		else
+		{
+			while (tmp->next != NULL)
+				tmp = tmp->next;
+			tmp->next = new;
+		}
+	}
+}
+void    print_env(ev_list *env)
+{
+    ev_list *tmp;
 
-    head = malloc(sizeof(ev_list));
-    if (head != NULL)
-        head = key_value(key, value);
-    return (head);
+    tmp = env;
+    while (tmp)
+    {
+        if (tmp->key != NULL && tmp->value != NULL)
+            printf("%s=%s\n",tmp->key,tmp->value);
+        tmp = tmp->next;
+    }
 }
 void    ft_env(ev_list *env, char **envp, t_exec *cmd)
 {
@@ -151,31 +174,15 @@ void    ft_env(ev_list *env, char **envp, t_exec *cmd)
     char **tmp;
     // if (ft_strcmp(cmd->args[0], "export") == 0)
     //     flag  = 1;
-    env = malloc(sizeof(ev_list) * 100);
+    // env = malloc(sizeof(ev_list) * 100);
     while (envp[i])
     {
         tmp = ft_split(envp[i], '=');
-        env = addback(env,tmp[0],tmp[1]);
-        // if (env->key != NULL && env->value != NULL && flag == 0)
-        //     printf("%s=%s\n", env->key ,env->value );
-        // if (flag == 1)
-        // {
-        //     int j = 0;
-        //     while (cmd->args[j])
-        //     {
-        //         printf("----%s\n",cmd->args[j]);
-        //         j++;
-        //     }
-            // printf("declare -x %s=%s\n", env->key ,env->value);
-        // }
+        addback(&env,key_value(tmp[0], tmp[1]));
         i++;
     }
-    while (env)
-        {
-            env = env->next;
-            printf("---%s---\n",env->value);
-        }
-    // free(env);
+    print_env(env);
+    free(tmp);
 }
 
 void    ft_export(ev_list *env, t_exec *cmd, char **envp)
