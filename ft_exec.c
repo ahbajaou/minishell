@@ -6,7 +6,7 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 00:17:17 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/06/25 20:14:22 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/06/26 23:20:28 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ int ft_strcmp(char *s1, char *s2)
     int i;
 
     i = 0;
+    if (!s1 || !s2)
+        return (1);
     while (s1[i] && s2[i] && s1[i] == s2[i])
         i++;
     return (s1[i] - s2[i]);
@@ -144,25 +146,36 @@ void	addback(ev_list **list, ev_list *new)
         tmp = tmp->next;
     tmp->next = new;
 }
-
-void    print_env(ev_list *env, t_exec *cmd)
+int is_alpha(char **str)
 {
-    ev_list *tmp;
-    int flag;
+    int i;
+    int j;
 
-    tmp = env;
-    flag = 0;
-    if (ft_strcmp(cmd->args[0], "export") == 0)
-            flag  = 1;
-    while (tmp)
-    {
-        if (tmp->key != NULL && tmp->value != NULL && flag == 0)
-             printf("%s=%s\n",tmp->key,tmp->value);
-        if (flag)
-            printf("declare -x %s=%s\n",tmp->key,tmp->value);
-        tmp = tmp->next;
-    }
-    free(tmp);
+  
+    i = 1;
+    if (!*str || !str)
+        return (0);
+    while (str[i])
+        {
+            j = 0;
+            while (str[i][j])
+            {
+                if ((str[i][j] >= 'a' && str[i][j] <= 'z')
+                || (str[i][j] >= 'A' && str[i][j] <= 'Z'))
+                {
+                    return (1);
+                }
+                j++;
+            }
+            i++;
+        }
+        return (0);
+}
+int _isalpha(char c)
+{
+    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+        return (1);
+    return (0);
 }
 int str_chr(char **str)
 {
@@ -186,6 +199,48 @@ int str_chr(char **str)
         }
         return (0);
 }
+void    print_env(ev_list *env,int flag)
+{
+    ev_list *tmp;
+
+    tmp = env;
+    while (tmp)
+    {
+        if (flag == 1 && tmp->key != NULL && tmp->value == NULL)
+            printf("declare -x %s\n",tmp->key);
+        if (flag == 0 && tmp->key != NULL && tmp->value != NULL)
+             printf("%s=%s\n",tmp->key,tmp->value);
+        if (flag == 1 && tmp->key != NULL && tmp->value != NULL)
+            printf("declare -x %s=%s\n",tmp->key,tmp->value);
+        tmp = tmp->next;
+    }
+    free(tmp);
+}
+
+int    check_double(ev_list *env ,char *key, char *value)
+{
+    (void)env;
+    (void)value;
+
+    ev_list *tmp;
+    tmp = env;
+    while (tmp)
+    {
+        if (ft_strcmp(tmp->key, key) == 0 && ft_strcmp(tmp->value, value))
+        {
+            printf("-------------\n");
+
+            addback(&env, key_value(key, value));
+            return (0);
+        }
+        if (ft_strcmp(tmp->key, key) == 0 && ft_strcmp(tmp->value, value) == 0)
+            return (0);
+        if (ft_strcmp(tmp->key, key) == 0 && value == NULL)
+            return (0);
+        tmp = tmp->next;
+    }
+    return (1);
+}
 void    add_expo(char **str, ev_list *env)
 {
     int i;
@@ -196,55 +251,30 @@ void    add_expo(char **str, ev_list *env)
     while (str[i])
     {
         tmp = ft_split(str[i], '=');
-        addback(&env, key_value(tmp[0], tmp[1]));
+        if (check_double(env,tmp[0],tmp[1]))
+                addback(&env, key_value(tmp[0], tmp[1]));
+
         i++;
     }
     free(tmp);
 }
 void    ft_env(ev_list *env, t_exec *cmd)
 {
-    // int i;
     int flag;
 
-    // i = 0;
     flag  = -1;
 
-    (void)cmd;
-
-    // char **tmp = NULL;
     if (ft_strcmp(cmd->args[0], "export") == 0)
         flag  = 1;
       if (ft_strcmp(cmd->args[0], "env") == 0)
         flag  = 0;
-     if (ft_strcmp(cmd->args[0], "export") == 0 && str_chr(cmd->args))
+     if ((ft_strcmp(cmd->args[0], "export") == 0 && str_chr(cmd->args))
+     || (ft_strcmp(cmd->args[0], "export") == 0 && is_alpha(cmd->args)))
         flag  = -1;
-    // if (flag == 0 || flag == 1)
-    // {
-    //     while (envp[i])
-    //     {
-    //         tmp = ft_split(envp[i], '=');
-    //         addback(&env,key_value(tmp[0], tmp[1]));
-    //         // printf("%s=%s\n",env->key,env->value);
-
-    //         i++;
-    //     }
-       
-    // }
     if (flag == -1)
-    {
-        if (str_chr(cmd->args))
-            add_expo(cmd->args, env);
-    }
+        add_expo(cmd->args, env);
     if (flag == 0 || flag == 1)
-        print_env(env,cmd);
-    // ev_list *tm = env;
-    // while (tm)
-    // {
-    //     // if (tm->key != NULL && tm->value != NULL)
-    //     printf("%s=%s\n",tm->key,tm->value);
-    //     tm = tm->next;
-    // }
-    // free(tmp);
+        print_env(env,flag);
 }
 
 void    check_builting(t_exec *cmd, ev_list *env)
