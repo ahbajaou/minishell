@@ -6,13 +6,12 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 00:17:17 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/07/05 00:35:18 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/07/05 02:56:30 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-#include <string.h>
 
 int ft_strcmp(char *s1, char *s2)
 {
