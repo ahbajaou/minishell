@@ -105,7 +105,6 @@ int main(int argc, char **argv, char **envp)
     ev_list *env = _env(envp);
     // t_list *envt = env1(NULL, envp);
 
-    // print_env(envt);
 	(void)argc, (void)argv;
     t_exec *exec_cmd = NULL;
     t_pipe *pipe_cmd = NULL;
