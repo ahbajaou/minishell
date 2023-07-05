@@ -6,7 +6,7 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 00:17:17 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/07/04 03:01:14 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/07/05 00:35:18 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,20 +46,11 @@ int    handel_q(char *str)
     flag = 0;
     while (str[i])
     {
-        printf("--%c--\n",str[i]);
          if (str[i] && str[i] == '-' && str[i + 1] == 'n')
          {
             flag  = 1;
             break ;
          }
-         else
-            flag = 0;
-
-        //  if (str[i] && str[i] == 'n' && str[i + 1] == 'n')
-        //  {
-        //     flag  = 1;
-        //     break ;
-        //  }
         i++;
     }
     if (flag == 1)
@@ -69,33 +60,13 @@ int    handel_q(char *str)
 void    echo_handler(char **args)
 {
     int i;
-    // int j = 0;
+
     int flag;
 
     i = 1;
     flag = 0;
      while (args[i])
      {
-            // j = 0;
-            // while  (args[i][j])
-            // {
-            //     // if (!( args[i][j] == '-' && args[i][j + 1] == 'n') || !(args[i][j] == 'n' && args[i][j + 1] == 'n'))
-            //     // {
-            //     //     printf("--break--\n");
-            //     //     break ;
-            //     // }
-            //     if (args[i][j] == '-')
-            //     {
-            //         while (args[i][j] == 'n')
-            //         {
-            //              printf("%c",args[i][j]);
-            //             j++;
-            //         }
-            //     }
-            //     // while ( args[i][j] == 'n' && args[i][j + 1] == 'n')
-            //     //     j++;
-            //     j++;
-            // }
             if (ft_strcmp(args[i], "-n") != 0 && handel_q(args[i]) == 1)
             {
                 while (args[i])
@@ -103,7 +74,7 @@ void    echo_handler(char **args)
                     printf("%s",args[i]); 
                     if (args[i + 1] == NULL)
                         break ;
-                    printf("[+]");
+                    printf(" ");
                     i++;
                 }
                 return ;
@@ -111,10 +82,25 @@ void    echo_handler(char **args)
         i++;
      }   
 }
+void    echo_print(char **str)
+{
+    int i;
+
+    i = 1;
+    while (str[i])
+    {
+        printf("%s",str[i]);
+        if (str[i + 1] == NULL)
+            break ;
+        printf(" ");
+        i++;
+    }
+    printf("\n");
+}
 void ft_echo(t_exec *cmd, ev_list *env)
 {
     int i;
-    // int j = 0;
+
     int flag;
 
     i = 0;
@@ -125,12 +111,13 @@ void ft_echo(t_exec *cmd, ev_list *env)
         if (ft_strcmp(cmd->args[i], "echo") == 0 && ft_strcmp(cmd->args[i + 1], "-n") == 0)
         {
             echo_handler(cmd->args);
-            break ;
+            return ;
         }
-        // if (ft_strcmp(cmd->args[i], "echo") == 0 && ft_strcmp(cmd->args[i + 1], "-n") != 0)
-        // {
-
-        // }
+        if (ft_strcmp(cmd->args[i], "echo") == 0 && ft_strcmp(cmd->args[i + 1], "-n") != 0)
+        {
+            echo_print(cmd->args);
+            return ;
+        }
         i++;
      }
 }
@@ -261,7 +248,6 @@ void delet_expo(ev_list *env, char *key,char *value)
                 {
                     while (tmp->next != NULL)
                     {
-                    // printf("========%s=====\n",tmp->key);
                         if (ft_strcmp(tmp->next->key, key) == 0)
                         {
 
@@ -354,8 +340,6 @@ void        delet_unset(ev_list **env,char *key)
 {
     ev_list *tmp = NULL;
     ev_list *perv;
-    // ev_list *earea;
-
 
     perv = NULL;
     tmp = (*env);
@@ -363,7 +347,6 @@ void        delet_unset(ev_list **env,char *key)
     {
         if (ft_strcmp(tmp->key, key) != 0)
         {
-            printf("---------\n");
             while (tmp->next)
             {
                 if (ft_strcmp(tmp->next->key, key) == 0)
@@ -398,11 +381,9 @@ void    ft_unset(ev_list **env, t_exec *cmd)
     {
         while (cmd->args[i])
         {
-        // printf("----------%s\n",tmp->key);
             if (ft_strcmp(cmd->args[i], tmp->key) == 0)
             {
                 delet_unset(&tmp,tmp->key);
-                // printf("----%s----\n",tmp->next->value);
                 return ;
             }
             else
@@ -410,6 +391,77 @@ void    ft_unset(ev_list **env, t_exec *cmd)
             i++;
         }
         tmp = tmp->next;
+    }
+}
+void    ft_pwd(t_exec *cmd)
+{
+    char cwd[256];
+    int i;
+
+    i = 0;
+    while (cmd->args[i])
+    {
+        if (ft_strcmp(cmd->args[i], "pwd") == 0)
+        {
+            if (getcwd(cwd, sizeof(cwd)) != NULL)
+                printf("%s\n",cwd);
+            return ;
+        }
+        i++;
+    }
+}
+void    update_path(ev_list *env, char *old,char *path,char *new)
+{
+    ev_list *tmp;
+
+    tmp = env;
+    while (tmp)
+    {
+        if (ft_strcmp(old, tmp->key) == 0)
+            tmp->value = ft_strdup(new);
+        if (ft_strcmp(path, tmp->key) == 0)
+            tmp->value = ft_strdup(new);
+        tmp = tmp->next;
+    }
+    free(tmp);
+}
+void    ft_cd(t_exec *cmd, ev_list *env)
+{
+    int i;
+
+    i = 0;
+    char cwd[256];
+    while (cmd->args[i])
+    {
+        if (ft_strcmp("cd", cmd->args[i]) == 0 && cmd->args[i + 1] == NULL)
+        {
+            if (getcwd(cwd, sizeof(cwd)) != NULL)
+                update_path(env,"OLDPWD",NULL,cwd);
+            chdir("..");
+            if (getcwd(cwd, sizeof(cwd)) != NULL)
+                update_path(env,NULL,"PWD",cwd);
+        }
+        else if (ft_strcmp("cd", cmd->args[i]) != 0)
+        {
+            if (getcwd(cwd, sizeof(cwd)) != NULL)
+                update_path(env,"OLDPWD",NULL,cwd);
+                chdir(cmd->args[i]);
+            if (getcwd(cwd, sizeof(cwd)) != NULL)
+                update_path(env,NULL,"PWD",cwd);
+        }
+        i++;
+    }
+}
+void    ft_exit(t_exec *cmd)
+{
+    int i;
+
+    i = 0;
+    while (cmd->args[i])
+    {
+        if (ft_strcmp(cmd->args[i], "exit") == 0)
+            exit(0);
+        i++;
     }
 }
 void check_builting(t_exec *cmd, ev_list *env)
@@ -427,6 +479,12 @@ void check_builting(t_exec *cmd, ev_list *env)
             ft_unset(&env, cmd);
         if (ft_strcmp("echo", cmd->args[i]) == 0)
             ft_echo(cmd,env);
+        if (ft_strcmp("pwd", cmd->args[i]) == 0)
+            ft_pwd(cmd);
+        if (ft_strcmp("cd", cmd->args[i]) == 0)
+            ft_cd(cmd,env);
+        if (ft_strcmp("exit", cmd->args[i]) == 0)
+            ft_exit(cmd);
         i++;
     }
 }
