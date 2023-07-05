@@ -6,7 +6,7 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 00:17:17 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/07/05 02:56:30 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/07/05 04:34:05 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,6 +231,7 @@ void print_env(ev_list *env, int flag)
             printf("declare -x %s=%s\n", tmp->key, tmp->value);
         tmp = tmp->next;
     }
+    printf("===================\n");
     free(tmp);
 }
 
@@ -335,14 +336,15 @@ void ft_env(ev_list *env, t_exec *cmd)
         print_env(env, flag);
 }
 
-void        delet_unset(ev_list **env,char *key)
+void        delet_unset(ev_list *env,char *key)
 {
-    ev_list *tmp = NULL;
+    ev_list *tmp;
     ev_list *perv;
 
     perv = NULL;
-    tmp = (*env);
-    if ((*env) != NULL)
+    tmp = env;
+
+    if (env != NULL)
     {
         if (ft_strcmp(tmp->key, key) != 0)
         {
@@ -361,28 +363,31 @@ void        delet_unset(ev_list **env,char *key)
             }
         }
         else
-            tmp = (*env);
-            (*env) = (*env)->next;
+        {
+            tmp = env;
+            env = env->next;
             free(tmp->key);
             free(tmp->value);
             free(tmp);
+        }
 
     }
 }
-void    ft_unset(ev_list **env, t_exec *cmd)
+void    ft_unset(ev_list *env, t_exec *cmd)
 {
     (void)env;
     (void)cmd;
     ev_list *tmp;
-    tmp = *env;
+    tmp = env;
     int i = 1;
+
     while (tmp)
     {
         while (cmd->args[i])
         {
             if (ft_strcmp(cmd->args[i], tmp->key) == 0)
             {
-                delet_unset(&tmp,tmp->key);
+                delet_unset(env,tmp->key);
                 return ;
             }
             else
@@ -391,6 +396,7 @@ void    ft_unset(ev_list **env, t_exec *cmd)
         }
         tmp = tmp->next;
     }
+    free(tmp);
 }
 void    ft_pwd(t_exec *cmd)
 {
@@ -475,7 +481,7 @@ void check_builting(t_exec *cmd, ev_list *env)
         if (ft_strcmp("export", cmd->args[i]) == 0)
             ft_env(env, cmd);
         if (ft_strcmp("unset", cmd->args[i]) == 0)
-            ft_unset(&env, cmd);
+            ft_unset(env, cmd);
         if (ft_strcmp("echo", cmd->args[i]) == 0)
             ft_echo(cmd,env);
         if (ft_strcmp("pwd", cmd->args[i]) == 0)
