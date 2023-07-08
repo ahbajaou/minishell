@@ -89,6 +89,7 @@ char	*ft_strjoin_allfree(char *s1, char *s2);
 char	*ft_strjoin__just1_free(char *s1, char *s2);
 void	free_s1_s2(char *str);
 char	*ft_strdup(const char *s1);
+<<<<<<< HEAD
 void	concatenate_remaining_strings(char *str, char *stre, char **new, char *join);
 void    skip_character(char **ptr,char *end,char targer);
 char *h_quotes(char **str,char symbol,t_copy *env);
@@ -98,5 +99,25 @@ char *h_dollar(char **str, t_copy *env);
 /*env*/
 void print_env(t_copy *env);
 t_copy	*env(t_copy *list, char **envt);
+=======
+void	check_free(char *str);
+
+int	is_symbol(char *str, char *stre, char *symbol);
+
+t_cmd	*parse_pipe(char **str, char *stre, t_list *env_l);
+t_cmd	*parse_exec(char **str, char *stre, t_list *env_l);
+t_cmd	*parse_redirs(t_cmd *cmd, char **str, char *stre, t_list *env_l);
+t_cmd	*pipe_data(t_cmd *right, t_cmd *left);
+t_cmd	*get_cmd(void);
+void	set_args(char *str, char **args, int *argc);
+
+ev_list	*_env(char **envp);
+void    ft_exec(t_exec *exec_cmd, ev_list *env);
+char	**ft_split( char *s, char c);
+void	addback(ev_list **list, ev_list *new);
+ev_list *key_value(char *key, char *value);
+void    execver_cmd(t_exec *cmd, ev_list *env);
+int ft_strcmp(char *s1, char *s2);
+>>>>>>> master
 
 #endif
