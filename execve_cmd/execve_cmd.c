@@ -6,7 +6,7 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 05:00:24 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/07/07 22:39:44 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/07/08 21:20:03 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,8 @@ void    execver_cmd(t_exec *cmd, ev_list *env)
     {
         if (ft_strcmp("ls", cmd->args[i]) == 0)
         {
-            if (ft_ls(cmd->args) == 0)
-                printf("ls work sucsses\n");
+            if (ft_ls(cmd->args) != 0)
+                return ;
 
         }
         i++;
