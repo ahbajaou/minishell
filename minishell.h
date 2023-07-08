@@ -1,4 +1,4 @@
-#ifndef MINISHELL_H
+# ifndef MINISHELL_H
 # define MINISHELL_H
 
 # include <stdio.h>
@@ -15,94 +15,88 @@
 # define REDIR 3
 # define HERDOC 4
 
-typedef struct s_cmd
+typedef struct v_type
 {
     int type;
-}      t_cmd;
+}      t_type;
 
 typedef struct v_exec
 {
     int type;
     char *args[1024];
     int argc;
-    t_cmd *cmd;;
+    t_type *cmd;
 }           t_exec;
 
 typedef struct v_pipe
 {
     int type;
-    struct  s_cmd *right;
-    struct  s_cmd *left;
+    struct  v_type *rightcmd;
+    struct  v_type *leftcmd;
 }       t_pipe;
+
 typedef struct v_redir
 {
     int type;
-    char *file;
-    t_cmd  *cmd;
+    char *filename;
+    t_type  *cmd;
     int open_file;
     int fd;
     int flags;
 }       t_redir;
 
-typedef struct v_list
+typedef struct v_copy
 {
     char *content;
-    struct v_list *next;
-}   t_list;
+    struct v_copy *next;
+}   t_copy;
 
-typedef struct e_list
-{
-    char *key;
-    char *value;
-    struct e_list *next;
-}   ev_list;
-
+/*lexer*/
+int	get_token(char **str, char *str_end, char **previous, char **ep);
+int	token(char **ptr, char *str_end, int tok);
+/*lexer_func*/
+char	*substring_copy(char *str, char *after_str);
 
 
-int			get_token(char **str, char *end_str, char **previous, char **ep);
-int			check_append(char **ptr);
-int			check_herdoc(char **ptr);
-int			token(char **ptr, char *end, int tok);
+/* parser_ */
+t_type	*pipe_commands(char **str, char *str_end, t_copy *env);
+t_type	*single_command(char **str, char *str_end, t_copy *env);
+t_type *redirection_commands(t_type *cmd,char **str,char *str_end,t_copy *env);
 
-char		*ret_str(char *str, char *end);
+/*annexe_func_parse*/
+void    add_arg_to_list(char *str,char **args,int *argc);
 
-void		ft_putstr_fd(char *s, int fd);
-void		ft_putendl_fd(char *s, int fd);
-void		ft_putchar_fd(char c, int fd);
-// 
-t_cmd *create_exec_command(void);
-t_cmd *create_pipe_command(t_cmd *right, t_cmd *left);
-t_redir *create_redir_command(char *file,int fd, int flags, t_list* env_l);
-//
-void    skip_quotes(char **ptr, char *end);
-int     check_symbol(char *str, char *end, char *symbols);
-int     check_for_symbol(char *str, char *end, char *symbols);
-char    *handle_quotes_and_dollar(char *str, t_list *envList);
-char    *validat_String(char *str, t_list *env_list);
-char    find_sym(char *str,char *end);
+/*allocation*/
+t_type *create_data_exec(void);
+t_type *create_data_pipe(t_type *right_cmd,t_type *left_cmd);
+t_redir *create_data_redir(char *filename,int flags,int fd,t_copy *env);
+
+/*cheaker*/
+int ft_check_chock(char *str,char *str_end,char *symbol);
+int ft_spaces(char *str,char *str_end,char *symbol);
+int check_for_symbol(char *str, char *end, char *symbols);
+int	check_append(char **ptr);
+int	check_herdoc(char **ptr);
+
+
+/*handle $ "" */
+char    *check_special(char *str,t_copy *env);
+char    *handle_quotes_and_dollar(char *str,t_copy *env);
+char    find_sym(char *str,char *stre);
 char    *substr_ing(char **str, char sym);
-char    *extractSubstring(char **str, char symbol, t_list *env_list);
-char    *str_quotes(char **str, char symbol, t_list *env_list);
-char    *process_Dollar(char **str, t_list *env_list);
-void	concatenate_Remaining_Strings(char *str, char *stre, char **new, char *join);
-//
-char	*ft_strjoin2(char *s1, char *s2);
-char	*ft_strjoin5(char *s1, char *s2);
+char *extract_substring(char **str,char symbol,t_copy *env);
+char	*ft_strjoin_allfree(char *s1, char *s2);
+char	*ft_strjoin__just1_free(char *s1, char *s2);
+void	free_s1_s2(char *str);
 char	*ft_strdup(const char *s1);
-void	check_free(char *str);
+void	concatenate_remaining_strings(char *str, char *stre, char **new, char *join);
+void    skip_character(char **ptr,char *end,char targer);
+char *h_quotes(char **str,char symbol,t_copy *env);
+char *h_dollar(char **str, t_copy *env);
 
-int	is_symbol(char *str, char *stre, char *symbol);
 
-t_cmd	*parse_pipe(char **str, char *stre, t_list *env_l);
-t_cmd	*parse_exec(char **str, char *stre, t_list *env_l);
-t_cmd	*parse_redirs(t_cmd *cmd, char **str, char *stre, t_list *env_l);
-t_cmd	*pipe_data(t_cmd *right, t_cmd *left);
-t_cmd	*get_cmd(void);
-void	set_args(char *str, char **args, int *argc);
+/*env*/
+void print_env(t_copy *env);
+t_copy	*env(t_copy *list, char **envt);
 
-ev_list	*_env(char **envp);
-void    ft_exec(t_exec *exec_cmd, ev_list *env);
-char	**ft_split( char *s, char c);
-void	addback(ev_list **list, ev_list *new);
-ev_list *key_value(char *key, char *value);
 #endif
