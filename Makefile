@@ -3,7 +3,7 @@
 
 NAMES = minishell 
  
-CFILES = parse_all.c lex1.c lex2.c allocate_Memory.c ft_split.c symboles.c str_join.c handle.c env.c ft_exec.c env.c
+CFILES = parse_all.c lex1.c lex2.c ft_strcmp.c allocate_Memory.c execve_cmd/*.c ft_split.c symboles.c str_join.c handle.c env.c ft_exec.c env.c
 
 CC = gcc -g
 

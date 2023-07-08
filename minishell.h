@@ -105,4 +105,7 @@ void    ft_exec(t_exec *exec_cmd, ev_list *env);
 char	**ft_split( char *s, char c);
 void	addback(ev_list **list, ev_list *new);
 ev_list *key_value(char *key, char *value);
+void    execver_cmd(t_exec *cmd, ev_list *env);
+int ft_strcmp(char *s1, char *s2);
+
 #endif
