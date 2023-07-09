@@ -35,6 +35,7 @@ int	get_token(char **str, char *str_end, char **previous, char **ep)
 		ptr++;
 	if (previous)
 		*previous = ptr;
+	// printf ("befoere TOK is : %d\n", tok);
  	tok = *ptr;
 	if (!tok)
 		return (0);

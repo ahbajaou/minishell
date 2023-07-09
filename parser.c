@@ -12,7 +12,7 @@ t_type	*pipe_commands(char **str, char *str_end, t_copy *env)
         get_token(str,str_end,0,0);
         cmd = create_data_pipe(cmd,pipe_commands(str,str_end,env));
    }
-        return (cmd);
+    return (cmd);
 }
 
 t_type	*single_command(char **str, char *str_end, t_copy *env)
@@ -37,6 +37,7 @@ t_type	*single_command(char **str, char *str_end, t_copy *env)
     exec_cmd->args[exec_cmd->argc] = 0; // P,NULL
     return((t_type*)cmd);
 }
+
 int	redir_error(int tok)
 {
 
@@ -65,7 +66,7 @@ t_type *redirection_commands(t_type *cmd,char **str,char *str_end,t_copy *env)
     {
         // token = get_token(str,str_end,&ptr,&ptr_end);
         token = get_token(str,str_end,0,0);
-        // printf("%s\n", *str);
+        printf("%s\n", *str);
         if(redir_error(get_token(str,str_end,&ptr,&ptr_end)))
             return(NULL);
         if(token == '>')
