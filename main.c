@@ -67,7 +67,9 @@ int main(int argc, char **argv, char **envp)
             else
                 break;
         }
-    ft_exec(exec_command,env);
+    if (ft_exec(exec_command,env))
+        return (0);
+    
     }
     return(0);
 }

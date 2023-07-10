@@ -1,0 +1,17 @@
+Makefile
+expand.c
+ft_exec.c
+ft_split.c
+func_special_char.c
+lex1.c
+m
+main.c
+mc_alloc.c
+minishell
+minishell.dSYM
+minishell.h
+parser.c
+quots_and_dollar.c
+send_mini_string.c
+special_char.c
+wolf_parse.c
