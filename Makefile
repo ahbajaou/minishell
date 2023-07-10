@@ -1,8 +1,9 @@
+
 NAMES = minishell 
  
-CFILES = main.c parser.c lex1.c mc_alloc.c wolf_parse.c special_char.c ft_split.c send_mini_string.c quots_and_dollar.c ft_exec.c func_special_char.c expand.c
+CFILES = main.c parser.c lex1.c mc_alloc.c wolf_parse.c special_char.c ft_split.c send_mini_string.c quots_and_dollar.c ft_exec.c execve/*.c func_special_char.c expand.c
 
-CC = CC -g
+CC = gcc -g
 
 CFLAGS = -Wall -Wextra -Werror -fsanitize=address -lreadline
 

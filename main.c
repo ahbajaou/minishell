@@ -31,8 +31,9 @@ int main(int argc, char **argv, char **envp)
     {
         char *str = readline("minishell: ");
         if (!str)
-            exit(1);
+            exit(0);
         add_history(str);
+            
         int end = strlen(str);
         t_type *cmd = pipe_commands(&str , str + end, NULL);
         if (cmd == NULL)
@@ -67,7 +68,7 @@ int main(int argc, char **argv, char **envp)
             else
                 break;
         }
-    if (ft_exec(exec_command,env))
+    if (ft_exec(exec_command,&env))
         return (0);
     
     }

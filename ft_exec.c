@@ -36,30 +36,58 @@ void ft_putstr(char *str)
         i++;
     }
 }
-
 int ft_len(char *str)
 {
     int i;
 
     i = 0;
+    if (!str)
+        return (0);
     while (str[i])
         i++;
     return (i);
 }
+char	*ft_join(char *s1, char *s2)
+{
+	unsigned int	i;
+	unsigned int	j;
+	char			*str;
+
+	i = 0;
+	j = 0;
+	if (s1 == NULL && s2 == NULL)
+		return (NULL);
+	str = malloc(ft_len(s1) + ft_len(s2) + 1);
+	if (s1)
+	{
+		while (s1[i] != '\0')
+		{
+			str[i] = s1[i];
+			i++;
+		}
+		free((char *)s1);
+	}
+	while (s2[j])
+		str[i++] = s2[j++];
+	str[i] = '\0';
+	return (str);
+}
 void    print_echo(char **str,int i,int flag)
 {
-    if (flag == 1)
-    {
+    char *tmp;
+
+    tmp = NULL;
         while (str[i])
         {
-            if ((str[i] != NULL && str[i + 1] == NULL)
-                || (str[i] != NULL && str[i + 1] != NULL && i != 1))
-                printf(" ");
-            printf("%s",str[i]);
+            tmp = ft_join(tmp,str[i]);
+            if (str[i + 1] != NULL)
+                tmp = ft_join(tmp, " ");
             i++;
         }
-        printf("\n");
-    }
+        printf("%s",tmp);
+        free(tmp);
+        if (flag == 1)
+            printf("\n");
 }
 int handel_n(char **str)
 {
@@ -76,13 +104,18 @@ int handel_n(char **str)
         j = 0;
         if ((j == 0 && str[i][j] != '-') || flag == 0)
         {
-            printf("--here--\n");
-            print_echo(str,i,1);
+            if (str[i - 1][0] == '-')
+                flag = 0;
+            print_echo(str,i,flag);
             return (0);
         }
         j++;
         while (str[i][j] == 'n')
+        {
             j++;
+        }
+        if (str[i][j] != 'n')
+            flag = 0;
         if (str[i + 1] == NULL)
                 flag = 0;
         i++;
@@ -95,12 +128,7 @@ void ft_echo(t_exec *cmd, ev_list *env)
      if (cmd->args[1])
      {
         if (handel_n(cmd->args) != 1)
-        {
-            printf("--lolo--\n");
             return ;
-        }
-        
-            // print_echo(cmd->args);
      }
 }
 char *ft__strdup(char *str)
@@ -318,13 +346,13 @@ void ft_env(ev_list *env, t_exec *cmd)
         print_env(env, flag);
 }
 
-void        delet_unset(ev_list *env,char *key)
+void        delet_unset(ev_list **env,char *key)
 {
     ev_list *tmp;
     ev_list *perv;
 
     perv = NULL;
-    tmp = env;
+    tmp = *env;
 
     if (env != NULL)
     {
@@ -346,8 +374,8 @@ void        delet_unset(ev_list *env,char *key)
         }
         else
         {
-            tmp = env;
-            env = env->next;
+            tmp = (*env);
+            (*env) = (*env)->next;
             free(tmp->key);
             free(tmp->value);
             free(tmp);
@@ -355,12 +383,12 @@ void        delet_unset(ev_list *env,char *key)
 
     }
 }
-void    ft_unset(ev_list *env, t_exec *cmd)
+void    ft_unset(ev_list **env, t_exec *cmd)
 {
     (void)env;
     (void)cmd;
     ev_list *tmp;
-    tmp = env;
+    tmp = (*env);
     int i = 1;
 
     while (tmp)
@@ -451,7 +479,7 @@ void    ft_exit(t_exec *cmd)
         i++;
     }
 }
-void check_builting(t_exec *cmd, ev_list *env)
+void check_builting(t_exec *cmd, ev_list **env)
 {
     int i;
 
@@ -459,31 +487,36 @@ void check_builting(t_exec *cmd, ev_list *env)
     while (cmd->args[i])
     {
         if (ft_strcmp("env", cmd->args[i]) == 0)
-            ft_env(env, cmd);
+            ft_env(*env, cmd);
         if (ft_strcmp("export", cmd->args[i]) == 0)
-            ft_env(env, cmd);
+            ft_env(*env, cmd);
         if (ft_strcmp("unset", cmd->args[i]) == 0)
             ft_unset(env, cmd);
         if (ft_strcmp("echo", cmd->args[i]) == 0)
         {
             // printf("--%s---\n",cmd->args[i]);
             // printf("--lolo---\n");
-            ft_echo(cmd,env);
+            ft_echo(cmd,*env);
         }
         if (ft_strcmp("pwd", cmd->args[i]) == 0)
             ft_pwd(cmd);
         if (ft_strcmp("cd", cmd->args[i]) == 0)
-            ft_cd(cmd,env);
+            ft_cd(cmd,*env);
         if (ft_strcmp("exit", cmd->args[i]) == 0)
             ft_exit(cmd);
         i++;
     }
 }
 
-int ft_exec(t_exec *exec_cmd, ev_list *env)
+int ft_exec(t_exec *exec_cmd, ev_list **env)
 {
     check_builting(exec_cmd, env);
-    // execver_cmd(exec_cmd, env);
+    if (execve_cmd(exec_cmd, env) != 0)
+    {
+        printf("--execve--\n");
+        return (0);
+    }
+    
     
     return (0);
 }
