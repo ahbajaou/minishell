@@ -6,7 +6,7 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/09 20:46:17 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/07/10 03:29:24 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/07/11 02:56:04 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -493,11 +493,7 @@ void check_builting(t_exec *cmd, ev_list **env)
         if (ft_strcmp("unset", cmd->args[i]) == 0)
             ft_unset(env, cmd);
         if (ft_strcmp("echo", cmd->args[i]) == 0)
-        {
-            // printf("--%s---\n",cmd->args[i]);
-            // printf("--lolo---\n");
             ft_echo(cmd,*env);
-        }
         if (ft_strcmp("pwd", cmd->args[i]) == 0)
             ft_pwd(cmd);
         if (ft_strcmp("cd", cmd->args[i]) == 0)
@@ -508,15 +504,13 @@ void check_builting(t_exec *cmd, ev_list **env)
     }
 }
 
-int ft_exec(t_exec *exec_cmd, ev_list **env)
+void ft_exec(t_exec *exec_cmd, ev_list **env)
 {
     check_builting(exec_cmd, env);
-    if (execve_cmd(exec_cmd, env) != 0)
+    if (exec_cmd->args[0])
     {
-        printf("--execve--\n");
-        return (0);
+        if (execve_cmd(exec_cmd, env) != 0)
+            return ;
     }
-    
-    
-    return (0);
+    ft_pipe(exec_cmd);
 }

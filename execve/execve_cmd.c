@@ -1,3 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execve_cmd.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/11 02:56:51 by ahbajaou          #+#    #+#             */
+/*   Updated: 2023/07/11 02:57:29 by ahbajaou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+
 
 #include "../minishell.h"
 
@@ -66,8 +79,7 @@ int    execve_cmd(t_exec *cmd, ev_list **env)
     j = 0;
     char *p;
     pid = fork();
-    if (pid == -1)
-        return (1);
+     char* const envp[] = {"TERM=xterm", NULL};
     if (pid == 0)
     {
         while (cmd->args[i])
@@ -79,8 +91,8 @@ int    execve_cmd(t_exec *cmd, ev_list **env)
                 p = ft_join2(current,cmd->args[i]);
                 if (!access(p,F_OK))
                 {
-                    if (!execve(p,cmd->args,NULL))
-                        return (1);
+                    if (execve(p,cmd->args,envp))
+                        exit(0);
                 }
 
                 j++;
@@ -89,5 +101,7 @@ int    execve_cmd(t_exec *cmd, ev_list **env)
             i++;
         }
     }
-    return (1);
+    else
+        return (0);
+    return (0);
 }

@@ -31,46 +31,44 @@ int main(int argc, char **argv, char **envp)
     {
         char *str = readline("minishell: ");
         if (!str)
-            exit(0);
+            return (0);
         add_history(str);
             
         int end = strlen(str);
-        t_type *cmd = pipe_commands(&str , str + end, NULL);
-        if (cmd == NULL)
-            exit(1);
-        while(cmd)
-        {
-            if(cmd->type == 1)
+            t_type *cmd = pipe_commands(&str , str + end, NULL);
+            if (cmd == NULL)
+                exit(1);
+            while(cmd)
             {
-                exec_command = (t_exec *)cmd;
-                char *expandedValue = func_expand(str);
-                if (expandedValue != NULL)
-                    printf("Valeur étendue: %s\n", expandedValue);
+                if(cmd->type == 1)
+                {
+                    exec_command = (t_exec *)cmd;
+                    char *expandedValue = func_expand(str);
+                    if (expandedValue != NULL)
+                        printf("Valeur étendue: %s\n", expandedValue);
 
-                printf("type de la commande execution : %d\n",exec_command->type);
-                printf("%s\n",exec_command->args[0]);
-                cmd = exec_command->cmd;
+                    printf("type de la commande execution : %d\n",exec_command->type);
+                    printf("%s\n",exec_command->args[0]);
+                    cmd = exec_command->cmd;
+                }
+                else if(cmd->type == 2)
+                {
+                    pipe_command = (t_pipe*)cmd;
+                    printf("type de la commande pipe : %d\n",pipe_command->type);
+                    cmd = pipe_command->leftcmd;
+                    // cmd = pipe_command->rightcmd;
+                }
+                else if(cmd->type == 3)
+                {
+                    redirection_command = (t_redir *)cmd;
+                    printf("type de la commande redirection : %d\n",redirection_command->type);
+                    printf("%s\n",redirection_command->filename);
+                    cmd = redirection_command->cmd;
+                }
+                else
+                    break;
             }
-            else if(cmd->type == 2)
-            {
-                pipe_command = (t_pipe*)cmd;
-                printf("type de la commande pipe : %d\n",pipe_command->type);
-                cmd = pipe_command->leftcmd;
-                // cmd = pipe_command->rightcmd;
-            }
-            else if(cmd->type == 3)
-            {
-                redirection_command = (t_redir *)cmd;
-                printf("type de la commande redirection : %d\n",redirection_command->type);
-                printf("%s\n",redirection_command->filename);
-                cmd = redirection_command->cmd;
-            }
-            else
-                break;
+            ft_exec(exec_command,&env);
         }
-    if (ft_exec(exec_command,&env))
-        return (0);
-    
-    }
     return(0);
 }

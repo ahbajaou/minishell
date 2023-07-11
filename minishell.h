@@ -111,7 +111,8 @@ char* func_expand(char *str);
 
 /*exec*/
 ev_list	*_env(char **envp);
-int    ft_exec(t_exec *exec_cmd, ev_list **env);
+void    ft_exec(t_exec *exec_cmd, ev_list **env);
+void    ft_pipe(t_exec *exec_cmd);
 char	**ft_split( char *s, char c);
 void	addback(ev_list **list, ev_list *new);
 int    execve_cmd(t_exec *exec_cmd, ev_list **env);
