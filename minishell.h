@@ -7,6 +7,7 @@
 # include <string.h>
 # include <fcntl.h>
 #include <string.h>
+#include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
@@ -112,10 +113,13 @@ char* func_expand(char *str);
 /*exec*/
 ev_list	*_env(char **envp);
 void ft_exec(t_exec *exec_cmd, ev_list **env,t_pipe *pipe_command);
-void    ft_pipe(t_exec *cmd,t_pipe *pipe);
+// void    ft_pipe(t_exec *cmd,t_pipe *pipe);
+void ft_pipe(t_exec *exec_cmd, ev_list **env,t_pipe *pipe_command);
 char	**ft_split( char *s, char c);
 void	addback(ev_list **list, ev_list *new);
 int    execve_cmd(t_exec *exec_cmd, ev_list **env);
+void viscmd(t_exec *exec_cmd, ev_list **env,t_pipe *pipe_command);
+int  check_builting(t_exec *cmd, ev_list **env);
 ev_list *key_value(char *key, char *value);
 
 #endif

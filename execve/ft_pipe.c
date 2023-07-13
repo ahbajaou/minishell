@@ -12,14 +12,14 @@
 
 #include "../minishell.h"
 
-void    ft_pipe(t_exec *cmd,t_pipe *pipe)
-{
-    (void)cmd;
-    (void)pipe;
-    if (pipe->leftcmd->type == 1)
-        printf("--start--\n");
-    printf("--%d--\n",pipe->leftcmd->type);
-    printf("--%d--\n",pipe->rightcmd->type);
-    printf("==%s==\n",cmd->args[0]);
-    printf("--here--\n");
-}
+// void    ft_pipe(t_exec *cmd,t_pipe *pipe)
+// {
+//     (void)cmd;
+//     (void)pipe;
+//     if (pipe->leftcmd->type == 1)
+//         printf("--start--\n");
+//     printf("--%d--\n",pipe->leftcmd->type);
+//     printf("--%d--\n",pipe->rightcmd->type);
+//     printf("==%s==\n",cmd->args[0]);
+//     printf("--here--\n");
+// }
