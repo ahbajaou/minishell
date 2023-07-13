@@ -6,7 +6,7 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/09 20:46:17 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/07/11 02:56:04 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/07/13 04:19:46 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -479,7 +479,7 @@ void    ft_exit(t_exec *cmd)
         i++;
     }
 }
-void check_builting(t_exec *cmd, ev_list **env)
+int  check_builting(t_exec *cmd, ev_list **env)
 {
     int i;
 
@@ -500,17 +500,33 @@ void check_builting(t_exec *cmd, ev_list **env)
             ft_cd(cmd,*env);
         if (ft_strcmp("exit", cmd->args[i]) == 0)
             ft_exit(cmd);
+        else
+            return (1);
         i++;
     }
+    return (0);
 }
 
-void ft_exec(t_exec *exec_cmd, ev_list **env)
+void ft_exec(t_exec *exec_cmd, ev_list **env,t_pipe *pipe_command)
 {
-    check_builting(exec_cmd, env);
-    if (exec_cmd->args[0])
+    (void)pipe_command;
+    (void)env;
+    // ft_pipe(exec_cmd,pipe_command);
+    printf(">>%d<<\n",exec_cmd->type);
+    if(exec_cmd->type == 2)
     {
-        if (execve_cmd(exec_cmd, env) != 0)
-            return ;
+        printf("start pipe\n");
     }
-    ft_pipe(exec_cmd);
+    // if(exec_cmd->type == EXEC)
+    // {
+    //     if (check_builting(exec_cmd, env) == 0)
+    //         return ;
+    //     // else if (execve_cmd(exec_cmd, env))
+    //     //     return ;
+    // }
+    // if (exec_cmd->type = REDIR)
+    // {
+
+    // }
+
 }

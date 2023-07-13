@@ -6,7 +6,7 @@
 /*   By: ahbajaou <ahbajaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 02:56:51 by ahbajaou          #+#    #+#             */
-/*   Updated: 2023/07/11 02:57:29 by ahbajaou         ###   ########.fr       */
+/*   Updated: 2023/07/13 01:09:41 by ahbajaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,6 @@ int    execve_cmd(t_exec *cmd, ev_list **env)
         }
     }
     else
-        return (0);
+        waitpid(pid,NULL,0);
     return (0);
 }

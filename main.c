@@ -48,14 +48,16 @@ int main(int argc, char **argv, char **envp)
                         printf("Valeur étendue: %s\n", expandedValue);
 
                     printf("type de la commande execution : %d\n",exec_command->type);
-                    printf("%s\n",exec_command->args[0]);
                     cmd = exec_command->cmd;
+                    printf("%s\n",exec_command->args[0]);
                 }
                 else if(cmd->type == 2)
                 {
                     pipe_command = (t_pipe*)cmd;
                     printf("type de la commande pipe : %d\n",pipe_command->type);
-                    cmd = pipe_command->leftcmd;
+                    cmd = pipe_command->rightcmd;
+                    // cmd = pipe_command->leftcmd;
+
                     // cmd = pipe_command->rightcmd;
                 }
                 else if(cmd->type == 3)
@@ -68,7 +70,7 @@ int main(int argc, char **argv, char **envp)
                 else
                     break;
             }
-            ft_exec(exec_command,&env);
+            ft_exec(exec_command,&env,pipe_command);
         }
     return(0);
 }
